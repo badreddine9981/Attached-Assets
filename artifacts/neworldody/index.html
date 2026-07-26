@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="theme-color" content="#030508">
+    <title>Neworldody - كتاب دودي الحي</title>
+    <meta name="description" content="كتاب حي مخصص لدودي. يُفتح صفحة واحدة كل يوم، ويحمل حكمة وسماءً جديدة.">
+    <meta property="og:title" content="Neworldody - كتاب دودي الحي">
+    <meta property="og:description" content="كتاب حي مخصص لدودي. يُفتح صفحة واحدة كل يوم، ويحمل حكمة وسماءً جديدة.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Neworldody - كتاب دودي الحي">
+    <meta name="twitter:description" content="كتاب حي مخصص لدودي. يُفتح صفحة واحدة كل يوم، ويحمل حكمة وسماءً جديدة.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SCENE 1: THE LIBRARY — الكتاب المعلق في الفضاء -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="library-scene" class="scene scene-active" aria-label="مكتبة Neworldody">
+        <div class="universe" id="librarySky" aria-hidden="true">
+            <div class="stars-bg"></div>
+            <div class="nebula"></div>
+            <div class="dust-particles"></div>
+            <div class="meteors" id="libraryMeteors"></div>
+        </div>
+        <div class="spotlight" aria-hidden="true"></div>
+        <div class="library-shelves" aria-hidden="true">
+            <div class="shelf shelf-far"></div>
+            <div class="shelf shelf-mid"></div>
+            <div class="shelf shelf-near"></div>
+        </div>
+
+        <div class="book-pedestal">
+            <div class="book-float">
+                <div class="book-3d" id="closedBook" role="button" tabindex="0" aria-label="افتح كتاب Neworldody">
+                    <div class="book-shadow"></div>
+                    <div class="book-body">
+                        <div class="book-spine">
+                            <div class="spine-line"></div>
+                            <div class="spine-text">Neworldody</div>
+                        </div>
+                        <div class="book-cover-front">
+                            <div class="cover-texture"></div>
+                            <div class="cover-gold-border"></div>
+                            <div class="cover-corner tl"></div>
+                            <div class="cover-corner tr"></div>
+                            <div class="cover-corner bl"></div>
+                            <div class="cover-corner br"></div>
+                            <div class="cover-logo">N</div>
+                            <div class="cover-title">Neworldody</div>
+                            <div class="cover-line"></div>
+                            <div class="cover-subtitle">كتاب لا يفتح إلا لمن انتظر</div>
+                            <div class="cover-dedication">لدودي</div>
+                            <div class="cover-ornament">❦</div>
+                        </div>
+                        <div class="book-pages-edge"></div>
+                    </div>
+                    <div class="book-glow"></div>
+                </div>
+            </div>
+            <div class="pedestal-base"></div>
+        </div>
+
+        <p class="library-hint" id="libraryHint">المس الكتاب لفتحه</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SCENE 2: INSIDE THE BOOK — الكتاب المفتوح -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="reading-scene" class="scene" aria-label="صفحة الكتاب">
+        <div class="reading-light" aria-hidden="true"></div>
+        <div class="open-book" id="openBook">
+            <!-- الصفحة اليسرى: رقم اليوم والتقدم -->
+            <div class="page page-left">
+                <div class="page-paper">
+                    <div class="paper-texture"></div>
+                    <div class="page-curl"></div>
+                    <div class="left-content">
+                        <div class="day-ornament top">◈</div>
+                        <div class="day-label">اليوم</div>
+                        <div class="day-arabic" id="dayNum">١</div>
+                        <div class="day-ornament bottom">◈</div>
+
+                        <div class="dedication-text">
+                            <span>لكِ، دودي</span>
+                        </div>
+
+                        <div class="progress-ring" aria-label="تقدم الرحلة">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="progress-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="progress-bar" id="progressBar" cx="50" cy="50" r="45" stroke-dasharray="0, 283"></circle>
+                            </svg>
+                            <span class="progress-text" id="progressText">1 / 365</span>
+                        </div>
+
+                        <div class="sky-preview" id="skyPreview">
+                            <div class="mini-stars" id="miniStars"></div>
+                            <div class="mini-moon" id="miniMoon"></div>
+                        </div>
+                        <p class="sky-note" id="skyNote">سماء هذا اليوم لم تتكرر منذ بداية الرحلة</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-divider"></div>
+
+            <!-- الصفحة اليمنى: محتوى اليوم -->
+            <div class="page page-right">
+                <div class="page-paper">
+                    <div class="paper-texture"></div>
+                    <div class="page-shadow"></div>
+                    <div class="right-content" id="rightContent">
+
+                        <!-- CARD 1: صفحة اليوم -->
+                        <article class="card page-card" id="pageCard">
+                            <div class="card-icon" aria-hidden="true">📖</div>
+                            <h1 class="page-title" id="pageTitle">البداية</h1>
+                            <div class="title-line"></div>
+                            <div class="message-body" id="pageMessage"></div>
+                        </article>
+
+                        <!-- CARD 2: حكمة اليوم -->
+                        <article class="card wisdom-card" id="wisdomCard">
+                            <div class="card-icon" aria-hidden="true">🌟</div>
+                            <div class="wisdom-block">
+                                <div class="quote-mark">"</div>
+                                <blockquote id="pageWisdom"></blockquote>
+                                <cite id="pageAuthor"></cite>
+                            </div>
+                        </article>
+
+                        <!-- CARD 3: فضاء اليوم -->
+                        <article class="card space-card" id="spaceCard">
+                            <div class="card-icon" aria-hidden="true">🪐</div>
+                            <div class="space-items">
+                                <div class="space-item" id="spaceFact"></div>
+                                <div class="space-item" id="starOfDay"></div>
+                                <div class="space-item" id="planetFocus"></div>
+                            </div>
+                        </article>
+
+                        <!-- CARD 4: البطاقة المتغيرة -->
+                        <article class="card variable-card" id="variableCard">
+                            <div class="card-icon" id="variableIcon" aria-hidden="true">🌱</div>
+                            <h2 class="variable-title" id="variableTitle">نصيحة اليوم</h2>
+                            <div class="variable-content" id="variableContent"></div>
+                        </article>
+
+                        <!-- CARD 5: البطاقة المفاجئة -->
+                        <article class="card surprise-card" id="surpriseCard">
+                            <div class="card-icon" id="surpriseIcon" aria-hidden="true">🎁</div>
+                            <h2 class="surprise-title" id="surpriseTitle">رسالة خاصة</h2>
+                            <div class="surprise-content" id="surpriseContent"></div>
+                        </article>
+
+                        <!-- مناسبة خاصة -->
+                        <article class="card occasion-card hidden" id="occasionCard">
+                            <div class="card-icon" id="occasionIcon" aria-hidden="true">✨</div>
+                            <h2 class="occasion-title" id="occasionTitle"></h2>
+                            <div class="occasion-content" id="occasionContent"></div>
+                        </article>
+
+                        <div class="page-footer">
+                            <div class="footer-line"></div>
+                            <p class="closing-text">أغلقي الكتاب الآن... فالغد يحمل صفحة جديدة</p>
+                            <button class="close-book-btn" id="closeBookBtn" type="button">
+                                <span class="btn-text">إغلاق الكتاب</span>
+                                <span class="btn-line"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SCENE 3: THE WAITING — انتظار الفجر -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="waiting-scene" class="scene" aria-label="انتظار الصفحة التالية">
+        <div class="waiting-universe" id="waitingSky" aria-hidden="true">
+            <div class="stars-slow"></div>
+            <div class="moon" id="waitingMoon"></div>
+            <div class="dust-particles"></div>
+            <div class="meteors" id="waitingMeteors"></div>
+        </div>
+
+        <div class="waiting-content">
+            <div class="closed-book-small">
+                <div class="cb-body">
+                    <div class="cb-cover"></div>
+                    <div class="cb-lock" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hourglass-container" aria-hidden="true">
+                <div class="hg-glass">
+                    <div class="hg-sand-top"></div>
+                    <div class="hg-sand-fall"></div>
+                    <div class="hg-sand-bottom"></div>
+                </div>
+            </div>
+
+            <div class="timer-display" id="timerDisplay">٠٠:٠٠:٠٠</div>
+            <p class="wait-text" id="waitText">الصفحة التالية تنتظرك مع الفجر</p>
+            <p class="wait-sub" id="waitSub">لم يحن موعد فتح يوم جديد بعد</p>
+            <button class="reopen-btn" id="reopenBtn" type="button">قراءة اليوم الحالي</button>
+        </div>
+    </section>
+
+    <!-- رسالة تمهيدية أول مرة -->
+    <div class="welcome-toast hidden" id="welcomeToast" role="status" aria-live="polite">
+        <span>مرحباً دودي. هذا الكتاب كُتب لكِ.</span>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/sky.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

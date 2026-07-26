@@ -1,0 +1,20 @@
+{
+  "name": "Neworldody - كتاب دودي الحي",
+  "short_name": "Neworldody",
+  "description": "كتاب حي مخصص لدودي. يُفتح صفحة واحدة كل يوم، ويحمل حكمة وسماءً جديدة.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030508",
+  "theme_color": "#030508",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

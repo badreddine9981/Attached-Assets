@@ -1,45 +1,63 @@
-# [Project name]
+# Neworldody
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A luxury living book experience for **Dodi (دودي)**. Each day unlocks one new page of reflection, wisdom, space, and a personal surprise. The book opens only once per day; the rest of the time it floats in its own night sky, waiting for the next dawn.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/neworldody run dev` — run the web app (path: `/`)
+- `PORT=20774 BASE_PATH=/ pnpm --filter @workspace/neworldody run build` — production build
+- `pnpm --filter @workspace/api-server run dev` — shared API server (currently unused by this app)
+- `pnpm run typecheck` — full workspace typecheck
+- Required env: none for the frontend (uses localStorage + JSON files). Database is available if the backend is ever needed.
 
 ## Stack
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- pnpm workspaces, Node.js 24, Vite 7
+- Frontend: plain HTML5, CSS3, vanilla JavaScript
+- Data: JSON files in `public/data/days/`
+- Persistence: `localStorage` for progress, settings, and next-unlock time
+- PWA: `manifest.json` + `sw.js` for offline reading
+- Fonts: Aref Ruqaa, IBM Plex Sans Arabic, Cinzel via Google Fonts
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/neworldody/index.html` — three scenes (library, reading, waiting)
+- `artifacts/neworldody/public/css/style.css` — luxury book styling, RTL Arabic, 3D transforms, animations
+- `artifacts/neworldody/public/js/app.js` — scene orchestration, day loading, card rendering
+- `artifacts/neworldody/public/js/storage.js` — `localStorage` progress + unlock rules
+- `artifacts/neworldody/public/js/sky.js` — deterministic unique sky per day
+- `artifacts/neworldody/public/data/days/day_001.json` … `day_007.json` — daily content
+- `artifacts/neworldody/public/manifest.json` — PWA manifest
+- `artifacts/neworldody/public/sw.js` — offline cache
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Plain vanilla JS instead of React because the requested experience is a single, cinematic HTML document with heavy CSS animations and no routing.
+- All content lives in JSON files so days can be authored without touching code.
+- Unlock logic is calendar-day based with a midnight countdown; the next page becomes available at the next midnight after the current page is read.
+- Every day gets a deterministic, unique sky generated from the day number so no two skies repeat.
+- The app is intentionally frontend-only and offline-first; no backend or database is needed for the first 7 days.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Open the floating leather book to reveal today's page.
+- Each page contains five cards: Page of the Day, Wisdom of the Day, Space of the Day, a rotating Variable Card, and a Surprise Card.
+- Special occasions (milestones, birthdays, etc.) render an extra card.
+- Close the book to return to the waiting scene with a countdown to the next midnight unlock.
+- Works offline as an installable PWA.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Built for Dodi (دودي) — personal, intimate tone; every page reads like a gift.
+- No generic motivational clichés; content is specific, calm, and human.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The `PORT` and `BASE_PATH` env vars must be set when running Vite build from a shell (the workflow supplies them automatically).
+- Service worker caches the first 7 days only; future days need to be added to `sw.js` or served fresh when online.
+- Days are loaded from `public/data/days/day_###.json`; the app falls back to a generated default if a file is missing.
 
 ## Pointers
 
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- See the `react-vite` skill if the app later needs routing or backend integration.
+- See the `pnpm-workspace` skill for workspace structure and shared libraries.

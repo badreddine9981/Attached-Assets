@@ -1,0 +1,9 @@
+{
+  "appName": "Neworldody",
+  "dedication": "لدودي",
+  "totalDays": 365,
+  "version": "1.0.0",
+  "variableCardTypes": ["tip", "reflection", "challenge", "word", "quote", "habit", "idea"],
+  "surpriseCardTypes": ["special", "love", "support", "poetry", "secret", "future", "night", "milestone"],
+  "milestones": [7, 30, 100, 365]
+}
