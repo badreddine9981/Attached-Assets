@@ -1,7 +1,7 @@
 {
-  "name": "Neworldody - كتاب دودي الحي",
+  "name": "Neworldody - كون دودي",
   "short_name": "Neworldody",
-  "description": "كتاب حي مخصص لدودي. يُفتح صفحة واحدة كل يوم، ويحمل حكمة وسماءً جديدة.",
+  "description": "رحلة سماوية شخصية مخصصة لدودي. صفحة، حكمة، ونجمة جديدة كل يوم.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#030508",

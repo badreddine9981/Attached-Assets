@@ -2,16 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <meta name="theme-color" content="#030508">
-    <title>Neworldody - كتاب دودي الحي</title>
-    <meta name="description" content="كتاب حي مخصص لدودي. يُفتح صفحة واحدة كل يوم، ويحمل حكمة وسماءً جديدة.">
-    <meta property="og:title" content="Neworldody - كتاب دودي الحي">
-    <meta property="og:description" content="كتاب حي مخصص لدودي. يُفتح صفحة واحدة كل يوم، ويحمل حكمة وسماءً جديدة.">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Neworldody - كتاب دودي الحي">
-    <meta name="twitter:description" content="كتاب حي مخصص لدودي. يُفتح صفحة واحدة كل يوم، ويحمل حكمة وسماءً جديدة.">
+    <title>Neworldody - كون دودي</title>
+    <meta name="description" content="رحلة سماوية شخصية مخصصة لدودي. صفحة، حكمة، ونجمة جديدة كل يوم.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,78 +14,133 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- ═══════════════════════════════════════════ -->
-    <!-- SCENE 1: THE LIBRARY — الكتاب المعلق في الفضاء -->
-    <!-- ═══════════════════════════════════════════ -->
-    <section id="library-scene" class="scene scene-active" aria-label="مكتبة Neworldody">
-        <div class="universe" id="librarySky" aria-hidden="true">
-            <div class="stars-bg"></div>
-            <div class="nebula"></div>
-            <div class="dust-particles"></div>
-            <div class="meteors" id="libraryMeteors"></div>
-        </div>
-        <div class="spotlight" aria-hidden="true"></div>
-        <div class="library-shelves" aria-hidden="true">
-            <div class="shelf shelf-far"></div>
-            <div class="shelf shelf-mid"></div>
-            <div class="shelf shelf-near"></div>
-        </div>
-
-        <div class="book-pedestal">
-            <div class="book-float">
-                <div class="book-3d" id="closedBook" role="button" tabindex="0" aria-label="افتح كتاب Neworldody">
-                    <div class="book-shadow"></div>
-                    <div class="book-body">
-                        <div class="book-spine">
-                            <div class="spine-line"></div>
-                            <div class="spine-text">Neworldody</div>
-                        </div>
-                        <div class="book-cover-front">
-                            <div class="cover-texture"></div>
-                            <div class="cover-gold-border"></div>
-                            <div class="cover-corner tl"></div>
-                            <div class="cover-corner tr"></div>
-                            <div class="cover-corner bl"></div>
-                            <div class="cover-corner br"></div>
-                            <div class="cover-logo">N</div>
-                            <div class="cover-title">Neworldody</div>
-                            <div class="cover-line"></div>
-                            <div class="cover-subtitle">كتاب لا يفتح إلا لمن انتظر</div>
-                            <div class="cover-dedication">لدودي</div>
-                            <div class="cover-ornament">❦</div>
-                        </div>
-                        <div class="book-pages-edge"></div>
-                    </div>
-                    <div class="book-glow"></div>
-                </div>
+    <!-- Audio consent overlay -->
+    <div id="audioConsent" class="audio-consent hidden" role="dialog" aria-modal="true">
+        <div class="consent-card">
+            <div class="consent-icon">🎵</div>
+            <h2>هل ترغبين في تفعيل الموسيقى؟</h2>
+            <p>موسيقى هادئة تناسب كل صفحة من رحلتكِ.</p>
+            <div class="consent-actions">
+                <button id="enableAudio" class="consent-btn primary" type="button">نعم، فعليها</button>
+                <button id="disableAudio" class="consent-btn" type="button">لا شكراً</button>
             </div>
-            <div class="pedestal-base"></div>
         </div>
+    </div>
 
-        <p class="library-hint" id="libraryHint">المس الكتاب لفتحه</p>
+    <!-- Audio controls -->
+    <button id="audioToggle" class="audio-toggle" type="button" aria-label="إعدادات الصوت">
+        <span id="audioIcon">🔇</span>
+    </button>
+
+    <div id="audioPanel" class="audio-panel hidden">
+        <div class="audio-row">
+            <span>الموسيقى</span>
+            <button id="musicToggle" class="audio-switch" type="button">إيقاف</button>
+        </div>
+        <div class="audio-row">
+            <span>المؤثرات</span>
+            <button id="effectsToggle" class="audio-switch" type="button">إيقاف</button>
+        </div>
+        <div class="audio-row volume-row">
+            <span>الصوت</span>
+            <input id="volumeSlider" type="range" min="0" max="1" step="0.05" value="0.6" aria-label="مستوى الصوت">
+        </div>
+    </div>
+
+    <!-- Navigation dots -->
+    <nav class="page-nav" id="pageNav" aria-label="التنقل">
+        <button class="nav-dot" data-page="galaxy" aria-label="المجرة" type="button"></button>
+        <button class="nav-dot" data-page="planets" aria-label="الكواكب" type="button"></button>
+        <button class="nav-dot" data-page="gate" aria-label="البوابة" type="button"></button>
+        <button class="nav-dot" data-page="challenge" aria-label="التحدي" type="button"></button>
+    </nav>
+
+    <!-- PAGE 1: LIVING GALAXY -->
+    <section id="galaxy-page" class="page page-active" aria-label="المجرة الحية">
+        <div class="galaxy-bg" id="galaxyBg" aria-hidden="true">
+            <div class="galaxy-spiral" id="galaxySpiral"></div>
+            <div class="galaxy-nebula" id="galaxyNebula"></div>
+            <div class="galaxy-stars" id="galaxyStars"></div>
+            <div class="galaxy-dust" id="galaxyDust"></div>
+            <div class="galaxy-shooting" id="galaxyShooting"></div>
+        </div>
+        <div class="galaxy-content">
+            <h1 class="galaxy-title">إليكِ تبدأ كل المجرات</h1>
+            <p class="galaxy-subtitle">رحلة تُكتب بين النجوم... صفحة بعد صفحة.</p>
+            <button class="galaxy-enter" id="galaxyEnter" type="button">المسي المجرة للدخول</button>
+        </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!-- SCENE 2: INSIDE THE BOOK — الكتاب المفتوح -->
-    <!-- ═══════════════════════════════════════════ -->
-    <section id="reading-scene" class="scene" aria-label="صفحة الكتاب">
+    <!-- PAGE 2: PLANETARY SYSTEM -->
+    <section id="planets-page" class="page" aria-label="النظام الكوكبي">
+        <div class="planets-bg" id="planetsBg" aria-hidden="true">
+            <div class="stars-field" id="planetsStars"></div>
+            <div class="nebula-mist"></div>
+        </div>
+        <h2 class="planets-title">كونكِ الذي لا ينتهي</h2>
+        <div class="solar-system" id="solarSystem" aria-label="الكواكب">
+            <div class="sun-core" id="sunCore" aria-hidden="true"></div>
+            <!-- Planets rendered by JS -->
+        </div>
+        <p class="planets-hint">المسي كوكباً لاكتشافه</p>
+    </section>
+
+    <!-- PAGE 3: TODAY'S GATE -->
+    <section id="gate-page" class="page" aria-label="بوابة اليوم">
+        <div class="gate-bg" id="gateBg" aria-hidden="true">
+            <div class="gate-stars" id="gateStars"></div>
+            <div class="gate-glow"></div>
+        </div>
+        <div class="gate-content">
+            <h2 class="gate-title">بوابة اليوم</h2>
+            <div class="gate-hourglass" id="gateHourglass" aria-hidden="true">
+                <div class="hg-frame"></div>
+                <div class="hg-top-glass"></div>
+                <div class="hg-bottom-glass"></div>
+                <div class="hg-sand-stream" id="hgSandStream"></div>
+                <div class="hg-sand-pile" id="hgSandPile"></div>
+            </div>
+            <div class="gate-countdown" id="gateCountdown">٠٠:٠٠:٠٠</div>
+            <p class="gate-status" id="gateStatus">الصفحة التالية تنتظركِ مع الفجر</p>
+            <button class="gate-open" id="gateOpen" type="button">افتحي كتاب اليوم</button>
+            <button class="gate-back" id="gateBack" type="button">العودة إلى الكواكب</button>
+        </div>
+    </section>
+
+    <!-- PAGE 4: TODAY'S CHALLENGE -->
+    <section id="challenge-page" class="page" aria-label="تحدي اليوم">
+        <div class="challenge-bg" id="challengeBg" aria-hidden="true">
+            <div class="challenge-stars" id="challengeStars"></div>
+        </div>
+        <div class="challenge-content">
+            <h2 class="challenge-title">تحدي اليوم</h2>
+            <div class="challenge-card" id="challengeCard">
+                <div class="challenge-icon" id="challengeIcon">⚡</div>
+                <p class="challenge-text" id="challengeText">جارٍ تحميل التحدي...</p>
+                <div class="challenge-reward" id="challengeReward">المكافأة: نجمة جديدة</div>
+            </div>
+            <button class="challenge-complete" id="challengeComplete" type="button">أنجزتُ التحدي</button>
+            <div class="challenge-celebration hidden" id="challengeCelebration">
+                <div class="celebration-stars"></div>
+                <p>أحسنتِ! فتحتِ نجمة جديدة.</p>
+            </div>
+            <button class="challenge-back" id="challengeBack" type="button">العودة</button>
+        </div>
+    </section>
+
+    <!-- READING / BOOK PAGE -->
+    <section id="reading-page" class="page" aria-label="كتاب اليوم">
         <div class="reading-light" aria-hidden="true"></div>
         <div class="open-book" id="openBook">
-            <!-- الصفحة اليسرى: رقم اليوم والتقدم -->
             <div class="page page-left">
                 <div class="page-paper">
                     <div class="paper-texture"></div>
-                    <div class="page-curl"></div>
                     <div class="left-content">
                         <div class="day-ornament top">◈</div>
                         <div class="day-label">اليوم</div>
                         <div class="day-arabic" id="dayNum">١</div>
                         <div class="day-ornament bottom">◈</div>
-
-                        <div class="dedication-text">
-                            <span>لكِ، دودي</span>
-                        </div>
-
+                        <div class="dedication-text"><span>لكِ، دودي</span></div>
                         <div class="progress-ring" aria-label="تقدم الرحلة">
                             <svg viewBox="0 0 100 100">
                                 <circle class="progress-bg" cx="50" cy="50" r="45"></circle>
@@ -99,34 +148,26 @@
                             </svg>
                             <span class="progress-text" id="progressText">1 / 365</span>
                         </div>
-
                         <div class="sky-preview" id="skyPreview">
                             <div class="mini-stars" id="miniStars"></div>
                             <div class="mini-moon" id="miniMoon"></div>
                         </div>
-                        <p class="sky-note" id="skyNote">سماء هذا اليوم لم تتكرر منذ بداية الرحلة</p>
+                        <p class="sky-note" id="skyNote">لم تتكرر هذه السماء منذ بداية الرحلة</p>
                     </div>
                 </div>
             </div>
-
             <div class="page-divider"></div>
-
-            <!-- الصفحة اليمنى: محتوى اليوم -->
             <div class="page page-right">
                 <div class="page-paper">
                     <div class="paper-texture"></div>
                     <div class="page-shadow"></div>
                     <div class="right-content" id="rightContent">
-
-                        <!-- CARD 1: صفحة اليوم -->
                         <article class="card page-card" id="pageCard">
                             <div class="card-icon" aria-hidden="true">📖</div>
                             <h1 class="page-title" id="pageTitle">البداية</h1>
                             <div class="title-line"></div>
                             <div class="message-body" id="pageMessage"></div>
                         </article>
-
-                        <!-- CARD 2: حكمة اليوم -->
                         <article class="card wisdom-card" id="wisdomCard">
                             <div class="card-icon" aria-hidden="true">🌟</div>
                             <div class="wisdom-block">
@@ -135,8 +176,6 @@
                                 <cite id="pageAuthor"></cite>
                             </div>
                         </article>
-
-                        <!-- CARD 3: فضاء اليوم -->
                         <article class="card space-card" id="spaceCard">
                             <div class="card-icon" aria-hidden="true">🪐</div>
                             <div class="space-items">
@@ -145,28 +184,21 @@
                                 <div class="space-item" id="planetFocus"></div>
                             </div>
                         </article>
-
-                        <!-- CARD 4: البطاقة المتغيرة -->
                         <article class="card variable-card" id="variableCard">
                             <div class="card-icon" id="variableIcon" aria-hidden="true">🌱</div>
                             <h2 class="variable-title" id="variableTitle">نصيحة اليوم</h2>
                             <div class="variable-content" id="variableContent"></div>
                         </article>
-
-                        <!-- CARD 5: البطاقة المفاجئة -->
                         <article class="card surprise-card" id="surpriseCard">
                             <div class="card-icon" id="surpriseIcon" aria-hidden="true">🎁</div>
                             <h2 class="surprise-title" id="surpriseTitle">رسالة خاصة</h2>
                             <div class="surprise-content" id="surpriseContent"></div>
                         </article>
-
-                        <!-- مناسبة خاصة -->
                         <article class="card occasion-card hidden" id="occasionCard">
                             <div class="card-icon" id="occasionIcon" aria-hidden="true">✨</div>
                             <h2 class="occasion-title" id="occasionTitle"></h2>
                             <div class="occasion-content" id="occasionContent"></div>
                         </article>
-
                         <div class="page-footer">
                             <div class="footer-line"></div>
                             <p class="closing-text">أغلقي الكتاب الآن... فالغد يحمل صفحة جديدة</p>
@@ -181,52 +213,107 @@
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!-- SCENE 3: THE WAITING — انتظار الفجر -->
-    <!-- ═══════════════════════════════════════════ -->
-    <section id="waiting-scene" class="scene" aria-label="انتظار الصفحة التالية">
-        <div class="waiting-universe" id="waitingSky" aria-hidden="true">
-            <div class="stars-slow"></div>
-            <div class="moon" id="waitingMoon"></div>
-            <div class="dust-particles"></div>
-            <div class="meteors" id="waitingMeteors"></div>
+    <!-- MODALS -->
+    <div class="modal-overlay hidden" id="modalOverlay"></div>
+
+    <!-- Star Map Modal -->
+    <div class="modal hidden" id="starMapModal" role="dialog" aria-modal="true" aria-label="خريطة النجوم">
+        <div class="modal-header">
+            <h2>🌌 خريطة نجوم رحلتكِ</h2>
+            <button class="modal-close" data-modal="starMapModal" type="button" aria-label="إغلاق">×</button>
         </div>
-
-        <div class="waiting-content">
-            <div class="closed-book-small">
-                <div class="cb-body">
-                    <div class="cb-cover"></div>
-                    <div class="cb-lock" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hourglass-container" aria-hidden="true">
-                <div class="hg-glass">
-                    <div class="hg-sand-top"></div>
-                    <div class="hg-sand-fall"></div>
-                    <div class="hg-sand-bottom"></div>
-                </div>
-            </div>
-
-            <div class="timer-display" id="timerDisplay">٠٠:٠٠:٠٠</div>
-            <p class="wait-text" id="waitText">الصفحة التالية تنتظرك مع الفجر</p>
-            <p class="wait-sub" id="waitSub">لم يحن موعد فتح يوم جديد بعد</p>
-            <button class="reopen-btn" id="reopenBtn" type="button">قراءة اليوم الحالي</button>
+        <div class="modal-body">
+            <p class="modal-sub">كل نجمة تمثل يوماً فتحتِه.</p>
+            <div class="star-map" id="starMap"></div>
+            <div class="star-map-stats" id="starMapStats"></div>
         </div>
-    </section>
-
-    <!-- رسالة تمهيدية أول مرة -->
-    <div class="welcome-toast hidden" id="welcomeToast" role="status" aria-live="polite">
-        <span>مرحباً دودي. هذا الكتاب كُتب لكِ.</span>
     </div>
 
-    <script src="js/storage.js"></script>
-    <script src="js/sky.js"></script>
-    <script src="js/app.js"></script>
+    <!-- Soul Mirror Modal -->
+    <div class="modal hidden" id="soulModal" role="dialog" aria-modal="true" aria-label="مرآة الروح">
+        <div class="modal-header">
+            <h2>🪞 مرآة الروح</h2>
+            <button class="modal-close" data-modal="soulModal" type="button" aria-label="إغلاق">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="soul-question" id="soulQuestion">...</div>
+            <textarea id="soulAnswer" class="soul-answer" rows="4" placeholder="اكتبي ما يخطر ببالكِ هنا..."></textarea>
+            <button class="soul-save" id="soulSave" type="button">حفظ في مرآة الروح</button>
+            <div class="soul-reflection" id="soulReflection"></div>
+            <div class="soul-history" id="soulHistory"></div>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div class="modal hidden" id="achievementsModal" role="dialog" aria-modal="true" aria-label="الإنجازات">
+        <div class="modal-header">
+            <h2>👑 إنجازاتكِ</h2>
+            <button class="modal-close" data-modal="achievementsModal" type="button" aria-label="إغلاق">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="achievements-grid" id="achievementsGrid"></div>
+        </div>
+    </div>
+
+    <!-- Messages Modal -->
+    <div class="modal hidden" id="messagesModal" role="dialog" aria-modal="true" aria-label="رسائل اليوم">
+        <div class="modal-header">
+            <h2>📜 رسائل اليوم</h2>
+            <button class="modal-close" data-modal="messagesModal" type="button" aria-label="إغلاق">×</button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-sub">من كتاب Neworldody إلى قلب دودي.</p>
+            <button class="modal-action" id="openTodayBook" type="button">افتحي كتاب اليوم</button>
+            <div class="messages-list" id="messagesList"></div>
+        </div>
+    </div>
+
+    <!-- Dreams Modal -->
+    <div class="modal hidden" id="dreamsModal" role="dialog" aria-modal="true" aria-label="أحلام النجوم">
+        <div class="modal-header">
+            <h2>✨ أحلام النجمية</h2>
+            <button class="modal-close" data-modal="dreamsModal" type="button" aria-label="إغلاق">×</button>
+        </div>
+        <div class="modal-body">
+            <textarea id="dreamInput" class="dream-input" rows="3" placeholder="اكتبي حلمكِ هنا..."></textarea>
+            <button class="dream-save" id="dreamSave" type="button">أرسلي إلى النجوم</button>
+            <div class="dreams-list" id="dreamsList"></div>
+        </div>
+    </div>
+
+    <!-- Surprises Modal -->
+    <div class="modal hidden" id="surprisesModal" role="dialog" aria-modal="true" aria-label="المفاجآت">
+        <div class="modal-header">
+            <h2>🎁 مفاجآت اليوم</h2>
+            <button class="modal-close" data-modal="surprisesModal" type="button" aria-label="إغلاق">×</button>
+        </div>
+        <div class="modal-body" id="surprisesBody">
+            <p>المسي الصندوق لاكتشاف رسالة اليوم.</p>
+            <div class="gift-box" id="giftBox" role="button" tabindex="0" aria-label="افتحي المفاجأة">🎁</div>
+            <div class="gift-content hidden" id="giftContent"></div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div class="modal event-modal hidden" id="eventModal" role="dialog" aria-modal="true" aria-label="مناسبة خاصة">
+        <div class="modal-body event-body">
+            <div class="event-icon" id="eventIcon">✨</div>
+            <h2 class="event-title" id="eventTitle"></h2>
+            <p class="event-message" id="eventMessage"></p>
+            <blockquote class="event-quote" id="eventQuote"></blockquote>
+            <cite class="event-author" id="eventAuthor"></cite>
+            <button class="event-close" id="eventClose" type="button">شكراً</button>
+        </div>
+    </div>
+
+    <!-- Welcome toast -->
+    <div class="welcome-toast hidden" id="welcomeToast" role="status" aria-live="polite">
+        <span>مرحباً دودي. هذا الكون كُتب لكِ.</span>
+    </div>
+
+    <script src="js/storage.js" defer></script>
+    <script src="js/sky.js" defer></script>
+    <script src="js/audio.js" defer></script>
+    <script src="js/app.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,14 @@
+{
+  "achievements": [
+    { "id": "first_step", "name": "البداية", "description": "فتحتِ أول صفحة في رحلتكِ.", "icon": "🌙", "condition": "highestDay >= 1" },
+    { "id": "week_warrior", "name": "نجمة الأسبوع", "description": "أكملتِ 7 أيام متتالية.", "icon": "⭐", "condition": "highestDay >= 7" },
+    { "id": "month_light", "name": "ضوء الشهر", "description": "أكملتِ 30 يوماً من الرحلة.", "icon": "🌕", "condition": "highestDay >= 30" },
+    { "id": "century_stone", "name": "حجر المئة", "description": "وصلتِ إلى اليوم 100.", "icon": "💎", "condition": "highestDay >= 100" },
+    { "id": "year_storm", "name": "عاصفة السنة", "description": "أكملتِ سنة كاملة من النور.", "icon": "🌌", "condition": "highestDay >= 365" },
+    { "id": "challenge_taker", "name": "مغامرة", "description": "أنجزتِ أول تحدي يومي.", "icon": "⚡", "condition": "challengesCompleted >= 1" },
+    { "id": "challenge_champion", "name": "بطلة التحديات", "description": "أنجزتِ 10 تحديات يومية.", "icon": "🏆", "condition": "challengesCompleted >= 10" },
+    { "id": "stargazer", "name": "راصدة النجوم", "description": "فتحتِ 30 نجمة في خريطة النجوم.", "icon": "🔭", "condition": "starsUnlocked >= 30" },
+    { "id": "listener", "name": "سامعة النغم", "description": "فعلتِ الموسيقى في رحلتكِ.", "icon": "🎵", "condition": "musicEnabled == true" },
+    { "id": "first_visit", "name": "دخول الكون", "description": "دخلتِ الكون لأول مرة.", "icon": "🌌", "condition": "firstVisit == false" }
+  ]
+}

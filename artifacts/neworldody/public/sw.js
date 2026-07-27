@@ -1,16 +1,21 @@
 /**
  * Neworldody Service Worker
- * Caches the app shell and data for offline reading.
+ * Caches the app shell and data for offline use.
  */
 
-const CACHE_NAME = 'neworldody-v1';
+const CACHE_NAME = 'neworldody-v2';
 const ASSETS = [
   '/',
   '/css/style.css',
   '/js/app.js',
   '/js/storage.js',
   '/js/sky.js',
+  '/js/audio.js',
   '/data/config.json',
+  '/data/challenges.json',
+  '/data/achievements.json',
+  '/data/events.json',
+  '/data/soul.json',
   '/data/days/day_001.json',
   '/data/days/day_002.json',
   '/data/days/day_003.json',
@@ -43,7 +48,6 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
 
-  // Network first for data, cache first for static assets
   if (request.url.includes('/data/')) {
     event.respondWith(
       fetch(request)

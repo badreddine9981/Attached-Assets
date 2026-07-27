@@ -2,8 +2,27 @@
   "appName": "Neworldody",
   "dedication": "لدودي",
   "totalDays": 365,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "variableCardTypes": ["tip", "reflection", "challenge", "word", "quote", "habit", "idea"],
   "surpriseCardTypes": ["special", "love", "support", "poetry", "secret", "future", "night", "milestone"],
-  "milestones": [7, 30, 100, 365]
+  "milestones": [7, 30, 100, 365],
+  "planets": [
+    { "id": "messages", "name": "رسائل", "color": "#d4af37", "icon": "📜", "description": "رسائل اليوم والكتاب" },
+    { "id": "wisdom", "name": "حكمة", "color": "#7fc8e8", "icon": "🌟", "description": "حكمة اليوم واقتباسات" },
+    { "id": "soul", "name": "مرآة الروح", "color": "#d4a5a5", "icon": "🪞", "description": "تأملات وأسئلة داخلية" },
+    { "id": "achievements", "name": "إنجازات", "color": "#b8941f", "icon": "👑", "description": "نجوم رحلتك" },
+    { "id": "surprises", "name": "مفاجآت", "color": "#9d4edd", "icon": "🎁", "description": "رسائل سرية وسماوية" },
+    { "id": "dreams", "name": "أحلام", "color": "#5fa8f3", "icon": "✨", "description": "أحلامكِ النجمية" }
+  ],
+  "audio": {
+    "galaxy": "galaxy-ambient",
+    "planets": "celestial-orchestra",
+    "gate": "calm-piano",
+    "challenge": "inspirational",
+    "book": "quiet-piano"
+  },
+  "starMap": {
+    "totalStars": 365,
+    "unlockOnDay": true
+  }
 }
