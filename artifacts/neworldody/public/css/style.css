@@ -867,13 +867,13 @@ textarea, input {
     position: relative;
     z-index: 5;
     display: flex;
-    width: 92vw;
-    max-width: 1100px;
-    height: 85vh;
-    max-height: 700px;
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    max-height: none;
     background: var(--paper);
-    border-radius: 8px 16px 16px 8px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 120px rgba(212, 175, 55, 0.1);
+    border-radius: 0;
+    box-shadow: none;
     overflow: hidden;
     animation: bookAppear 1s ease forwards;
 }
@@ -883,16 +883,16 @@ textarea, input {
 }
 
 @keyframes bookAppear {
-    from { opacity: 0; transform: scale(0.85) rotateX(10deg); }
-    to { opacity: 1; transform: scale(1) rotateX(0); }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes bookClose {
-    from { opacity: 1; transform: scale(1) rotateX(0); }
-    to { opacity: 0; transform: scale(0.8) rotateX(-10deg); }
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
-.page {
+.open-book .page {
     flex: 1;
     position: relative;
     overflow: hidden;
@@ -1258,20 +1258,22 @@ textarea, input {
 
 .modal {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90vw;
-    max-width: 460px;
-    max-height: 80vh;
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    max-height: none;
     background: linear-gradient(135deg, #1a1028, #0a0a15);
-    border: 1px solid rgba(212, 175, 55, 0.25);
-    border-radius: var(--radius);
+    border: none;
+    border-top: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 0;
     z-index: 1600;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 20px 80px rgba(0,0,0,0.6), 0 0 60px rgba(212, 175, 55, 0.1);
+    box-shadow: none;
 }
 
 .modal-header {
@@ -1308,6 +1310,8 @@ textarea, input {
 .modal-body {
     padding: 24px;
     overflow-y: auto;
+    flex: 1;
+    min-height: 0;
 }
 
 .modal-sub {
@@ -1517,10 +1521,12 @@ textarea, input {
 
 /* Event Modal */
 .event-modal {
-    max-width: 380px;
+    max-width: none;
     text-align: center;
     background: linear-gradient(135deg, #2a1810, #1a1028);
-    border: 1px solid var(--gold);
+    border: none;
+    border-top: 1px solid var(--gold);
+    justify-content: center;
 }
 
 .event-body {
@@ -1633,9 +1639,10 @@ textarea, input {
 
     .open-book {
         flex-direction: column;
-        width: 95vw;
-        height: 92vh;
+        width: 100vw;
+        height: 100vh;
         max-height: none;
+        border-radius: 0;
     }
     .page-left { min-height: 180px; flex: none; }
     .page-right { flex: 1; }
@@ -1649,7 +1656,7 @@ textarea, input {
     .wisdom-block blockquote { font-size: 1.05rem; }
     .card { padding: 18px; }
 
-    .modal { width: 92vw; max-height: 85vh; }
+    .modal { width: 100vw; height: 100vh; max-height: none; }
     .star-map { grid-template-columns: repeat(5, 1fr); }
 
     .page-nav { right: 10px; gap: 8px; }
