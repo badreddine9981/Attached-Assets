@@ -229,6 +229,32 @@
         </div>
     </div>
 
+    <!-- Messages Modal -->
+    <div class="modal hidden" id="messagesModal" role="dialog" aria-modal="true" aria-label="رسائل اليوم">
+        <div class="modal-header">
+            <h2>📜 رسائل اليوم</h2>
+            <button class="modal-close" data-modal="messagesModal" type="button" aria-label="إغلاق">×</button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-sub">من كتاب Neworldody إلى قلب دودي.</p>
+            <button class="modal-action" id="openTodayBook" type="button">افتحي كتاب اليوم</button>
+            <div class="messages-list" id="messagesList"></div>
+            <button class="modal-close" data-modal="messagesModal" type="button" style="margin-top:1rem;width:100%">العودة إلى الكواكب</button>
+        </div>
+    </div>
+
+    <!-- Wisdom Modal -->
+    <div class="modal hidden" id="wisdomModal" role="dialog" aria-modal="true" aria-label="حكمة اليوم">
+        <div class="modal-header">
+            <h2>🌟 حكمة اليوم</h2>
+            <button class="modal-close" data-modal="wisdomModal" type="button" aria-label="إغلاق">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="wisdom-list" id="wisdomList"></div>
+            <button class="modal-close" data-modal="wisdomModal" type="button" style="margin-top:1rem;width:100%">العودة إلى الكواكب</button>
+        </div>
+    </div>
+
     <!-- Soul Mirror Modal -->
     <div class="modal hidden" id="soulModal" role="dialog" aria-modal="true" aria-label="مرآة الروح">
         <div class="modal-header">
@@ -241,6 +267,7 @@
             <button class="soul-save" id="soulSave" type="button">حفظ في مرآة الروح</button>
             <div class="soul-reflection" id="soulReflection"></div>
             <div class="soul-history" id="soulHistory"></div>
+            <button class="modal-close" data-modal="soulModal" type="button" style="margin-top:1rem;width:100%">العودة إلى الكواكب</button>
         </div>
     </div>
 
@@ -252,19 +279,7 @@
         </div>
         <div class="modal-body">
             <div class="achievements-grid" id="achievementsGrid"></div>
-        </div>
-    </div>
-
-    <!-- Messages Modal -->
-    <div class="modal hidden" id="messagesModal" role="dialog" aria-modal="true" aria-label="رسائل اليوم">
-        <div class="modal-header">
-            <h2>📜 رسائل اليوم</h2>
-            <button class="modal-close" data-modal="messagesModal" type="button" aria-label="إغلاق">×</button>
-        </div>
-        <div class="modal-body">
-            <p class="modal-sub">من كتاب Neworldody إلى قلب دودي.</p>
-            <button class="modal-action" id="openTodayBook" type="button">افتحي كتاب اليوم</button>
-            <div class="messages-list" id="messagesList"></div>
+            <button class="modal-close" data-modal="achievementsModal" type="button" style="margin-top:1rem;width:100%">العودة إلى الكواكب</button>
         </div>
     </div>
 
@@ -278,6 +293,7 @@
             <textarea id="dreamInput" class="dream-input" rows="3" placeholder="اكتبي حلمكِ هنا..."></textarea>
             <button class="dream-save" id="dreamSave" type="button">أرسلي إلى النجوم</button>
             <div class="dreams-list" id="dreamsList"></div>
+            <button class="modal-close" data-modal="dreamsModal" type="button" style="margin-top:1rem;width:100%">العودة إلى الكواكب</button>
         </div>
     </div>
 
@@ -288,9 +304,9 @@
             <button class="modal-close" data-modal="surprisesModal" type="button" aria-label="إغلاق">×</button>
         </div>
         <div class="modal-body" id="surprisesBody">
-            <p>المسي الصندوق لاكتشاف رسالة اليوم.</p>
             <div class="gift-box" id="giftBox" role="button" tabindex="0" aria-label="افتحي المفاجأة">🎁</div>
             <div class="gift-content hidden" id="giftContent"></div>
+            <button class="modal-close" data-modal="surprisesModal" type="button" style="margin-top:1rem;width:100%">العودة إلى الكواكب</button>
         </div>
     </div>
 

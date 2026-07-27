@@ -239,10 +239,7 @@ const App = (() => {
         });
         if (dom.soulSave) dom.soulSave.addEventListener('click', saveSoulAnswer);
         if (dom.dreamSave) dom.dreamSave.addEventListener('click', saveDream);
-        if (dom.giftBox) {
-            dom.giftBox.addEventListener('click', openGift);
-            dom.giftBox.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') openGift(); });
-        }
+        // Gift box click is wired in renderSurprises() to receive fresh data each open
     }
 
     // ═══════════════════════════════════════════
@@ -317,6 +314,7 @@ const App = (() => {
             orbit.style.top = '50%';
             orbit.style.left = '50%';
             orbit.style.transform = 'translate(-50%, -50%)';
+            orbit.style.pointerEvents = 'none';
             dom.solarSystem.appendChild(orbit);
 
             const orbitContainer = document.createElement('div');
@@ -328,6 +326,7 @@ const App = (() => {
             orbitContainer.style.left = '50%';
             orbitContainer.style.marginTop = `-${orbitRadii[i]}px`;
             orbitContainer.style.marginLeft = `-${orbitRadii[i]}px`;
+            orbitContainer.style.pointerEvents = 'none';
 
             const planetEl = document.createElement('button');
             planetEl.className = 'planet';
@@ -339,6 +338,8 @@ const App = (() => {
             planetEl.style.left = '50%';
             planetEl.style.transform = 'translate(-50%, -50%)';
             planetEl.style.animationDelay = `${i * -0.5}s`;
+            planetEl.style.pointerEvents = 'auto';
+            planetEl.style.cursor = 'pointer';
             planetEl.setAttribute('role', 'button');
             planetEl.setAttribute('aria-label', planet.name);
             planetEl.innerHTML = `<span class="planet-icon">${planet.icon}</span><span class="planet-label">${planet.name}</span>`;
@@ -354,16 +355,54 @@ const App = (() => {
         SkyGenerator.generatePlanetsBackground();
     }
 
-    function openPlanet(planetId) {
+    // ═══════════════════════════════════════════
+    // PLANET SYSTEM — SHARED CLASS
+    // One config per planet. Only the data source changes.
+    // ═══════════════════════════════════════════
+    const PLANET_CONFIG = {
+        messages:     { dataFile: 'data/messages.json',     modalId: 'messagesModal' },
+        wisdom:       { dataFile: 'data/wisdom.json',       modalId: 'wisdomModal' },
+        soul:         { dataFile: 'data/mirror.json',       modalId: 'soulModal' },
+        achievements: { dataFile: 'data/achievements.json', modalId: 'achievementsModal' },
+        surprises:    { dataFile: 'data/surprises.json',    modalId: 'surprisesModal' },
+        dreams:       { dataFile: 'data/dreams.json',       modalId: 'dreamsModal' },
+    };
+
+    async function openPlanet(planetId) {
+        const config = PLANET_CONFIG[planetId];
+        if (!config) { console.warn('Unknown planet:', planetId); return; }
+
+        console.log('Planet clicked: ' + planetId);
         AudioManager.playSFX('planetClick');
-        switch (planetId) {
-            case 'messages': goToPage('gate'); break;
-            case 'wisdom': openTodayBook(); break;
-            case 'soul': openModal('soulModal'); renderSoul(); break;
-            case 'achievements': openModal('achievementsModal'); renderAchievements(); break;
-            case 'surprises': openModal('surprisesModal'); renderSurprises(); break;
-            case 'dreams': openModal('dreamsModal'); renderDreams(); break;
+
+        console.log('Loading JSON...');
+        let data = {};
+        try {
+            const res = await fetch(config.dataFile);
+            if (res.ok) {
+                data = await res.json();
+                console.log('JSON loaded');
+            } else {
+                console.warn('JSON not found for ' + planetId + ', using fallback');
+                console.log('JSON loaded (fallback)');
+            }
+        } catch (e) {
+            console.warn('JSON load error for ' + planetId + ':', e);
+            console.log('JSON loaded (fallback)');
         }
+
+        openModal(config.modalId);
+
+        switch (planetId) {
+            case 'messages':     renderMessages(data);     break;
+            case 'wisdom':       renderWisdom(data);       break;
+            case 'soul':         renderSoul(data);         break;
+            case 'achievements': renderAchievements(data); break;
+            case 'surprises':    renderSurprises(data);    break;
+            case 'dreams':       renderDreams(data);       break;
+        }
+
+        console.log('Rendering complete');
     }
 
     function lightenColor(hex, percent) {
@@ -648,11 +687,52 @@ const App = (() => {
         }
     }
 
-    // Soul Mirror
-    function renderSoul() {
-        const seed = currentDay + 1000;
-        const q = soulQuestions[(currentDay - 1) % soulQuestions.length] || soulQuestions[0] || 'ما الذي تبحثين عنه اليوم؟';
-        const r = soulReflections[(currentDay - 1) % soulReflections.length] || '';
+    // ═══════════════════════════════════════════
+    // PLANET RENDER FUNCTIONS — ONE PER PLANET
+    // Each follows the same structure; only data differs.
+    // ═══════════════════════════════════════════
+
+    // Messages planet
+    function renderMessages(data) {
+        const list = dom.messagesList;
+        if (!list) return;
+        const msgs = data?.messages || [];
+        if (!msgs.length) {
+            list.innerHTML = '<div class="modal-sub">لا توجد رسائل بعد. تعالي غداً!</div>';
+            return;
+        }
+        list.innerHTML = msgs.map(m => `
+            <div class="history-item">
+                <div class="history-date">${m.icon || '💌'} ${m.title || ''}</div>
+                <div>${m.body || ''}</div>
+            </div>
+        `).join('');
+    }
+
+    // Wisdom planet
+    function renderWisdom(data) {
+        const list = document.getElementById('wisdomList');
+        if (!list) return;
+        const quotes = data?.quotes || [];
+        if (!quotes.length) {
+            list.innerHTML = '<div class="modal-sub">لا توجد حكمة بعد. عودي لاحقاً!</div>';
+            return;
+        }
+        list.innerHTML = quotes.map(q => `
+            <div class="history-item">
+                <div class="quote-mark">"</div>
+                <blockquote style="margin:0.25rem 0">${q.quote || ''}</blockquote>
+                ${q.author ? `<div class="history-date">— ${q.author}</div>` : ''}
+            </div>
+        `).join('');
+    }
+
+    // Soul Mirror planet
+    function renderSoul(data) {
+        const questions = (data && data.questions && data.questions.length) ? data.questions : soulQuestions;
+        const reflections = (data && data.reflections && data.reflections.length) ? data.reflections : soulReflections;
+        const q = questions[(currentDay - 1) % (questions.length || 1)] || questions[0] || 'ما الذي تبحثين عنه اليوم؟';
+        const r = reflections[(currentDay - 1) % (reflections.length || 1)] || '';
         if (dom.soulQuestion) dom.soulQuestion.textContent = q;
         if (dom.soulReflection) dom.soulReflection.textContent = r;
         if (dom.soulAnswer) dom.soulAnswer.value = '';
@@ -675,18 +755,17 @@ const App = (() => {
         if (!a) return;
         Storage.saveSoulAnswer(q, a);
         AudioManager.playSFX('button');
-        renderSoul();
+        renderSoul({});
         checkAchievements();
     }
 
-    // Achievements
-    function renderAchievements() {
+    // Achievements planet
+    function renderAchievements(data) {
         if (!dom.achievementsGrid) return;
-        const state = Storage.evaluateState();
+        const achList = achievements.length ? achievements : (data?.achievements || []);
         const unlocked = Storage.getAchievements();
         dom.achievementsGrid.innerHTML = '';
-
-        achievements.forEach(ach => {
+        achList.forEach(ach => {
             const isUnlocked = !!unlocked[ach.id];
             const item = document.createElement('div');
             item.className = `achievement-item ${isUnlocked ? 'unlocked' : 'locked'}`;
@@ -713,7 +792,7 @@ const App = (() => {
         });
         if (changed) {
             AudioManager.playSFX('achievement');
-            renderAchievements();
+            renderAchievements({});
         }
     }
 
@@ -736,18 +815,60 @@ const App = (() => {
         }
     }
 
-    // Dreams
-    function renderDreams() {
-        const data = Storage.getDreams().dreams.slice(0, 10);
+    // Surprises planet
+    function renderSurprises(data) {
+        const surprisesList = data?.surprises || [];
+        const giftBox = dom.giftBox;
+        const giftContent = dom.giftContent;
+        if (!giftBox || !giftContent) return;
+
+        giftBox.classList.remove('hidden');
+        giftContent.classList.add('hidden');
+        giftContent.innerHTML = '';
+
+        // Remove old listener by replacing node
+        const newGiftBox = giftBox.cloneNode(true);
+        giftBox.parentNode.replaceChild(newGiftBox, giftBox);
+        dom.giftBox = newGiftBox;
+
+        newGiftBox.addEventListener('click', () => {
+            AudioManager.playSFX('gift');
+            newGiftBox.classList.add('hidden');
+            if (surprisesList.length) {
+                const s = surprisesList[(currentDay - 1) % surprisesList.length];
+                giftContent.classList.remove('hidden');
+                giftContent.innerHTML = `
+                    <div class="history-item">
+                        <div class="history-date">${s.icon || '🎁'} ${s.title || 'مفاجأة'}</div>
+                        <div>${s.content || ''}</div>
+                    </div>`;
+            } else {
+                giftContent.classList.remove('hidden');
+                giftContent.innerHTML = '<div class="modal-sub">مفاجآت قادمة قريباً...</div>';
+            }
+        });
+        newGiftBox.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') newGiftBox.click();
+        });
+    }
+
+    // Dreams planet
+    function renderDreams(data) {
+        const prompts = data?.prompts || [];
+        const prompt = prompts[(currentDay - 1) % (prompts.length || 1)] || 'اكتبي حلمكِ هنا...';
+        if (dom.dreamInput) {
+            dom.dreamInput.placeholder = prompt;
+            dom.dreamInput.value = '';
+        }
+        const storedDreams = Storage.getDreams().dreams.slice(0, 10);
         if (dom.dreamsList) {
-            dom.dreamsList.innerHTML = data.map(d => `
+            dom.dreamsList.innerHTML = storedDreams.map(d => `
                 <div class="dream-item">
                     <div class="dream-date">${formatDate(d.date)}</div>
                     <div>${d.text}</div>
                 </div>
             `).join('');
         }
-        if (dom.dreamInput) dom.dreamInput.value = '';
     }
 
     function saveDream() {
@@ -755,36 +876,7 @@ const App = (() => {
         if (!text) return;
         Storage.saveDream(text);
         AudioManager.playSFX('button');
-        renderDreams();
-    }
-
-    // Surprises
-    function renderSurprises() {
-        if (dom.giftBox) dom.giftBox.classList.remove('hidden');
-        if (dom.giftContent) dom.giftContent.classList.add('hidden');
-    }
-
-    function openGift() {
-        if (!dayData) {
-            loadDay(currentDay).then(d => {
-                dayData = d;
-                showGiftContent();
-            });
-            return;
-        }
-        showGiftContent();
-    }
-
-    function showGiftContent() {
-        if (!dayData) return;
-        const card = dayData.surprise_card;
-        if (!card) return;
-        if (dom.giftBox) dom.giftBox.classList.add('hidden');
-        if (dom.giftContent) {
-            dom.giftContent.classList.remove('hidden');
-            dom.giftContent.innerHTML = `<h3>${card.type === 'love' ? 'رسالة حب' : card.type === 'secret' ? 'سر' : 'مفاجأة'}</h3><p>${card.content}</p>`;
-        }
-        AudioManager.playSFX('gift');
+        renderDreams({});
     }
 
     // Events
