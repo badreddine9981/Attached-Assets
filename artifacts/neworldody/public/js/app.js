@@ -36,6 +36,18 @@ const App = (() => {
 
         const progress = Storage.getProgress();
         currentDay = progress.currentDay || 1;
+
+        // Task 1 & 6: Advance to the latest available day on load
+        if (Storage.canUnlockToday()) {
+            const nextDay = (progress.highestDay || 0) + 1;
+            if (nextDay > currentDay && nextDay <= CONFIG.TOTAL_DAYS) {
+                currentDay = nextDay;
+            }
+        }
+
+        // Pre-load today's day data so planets are ready immediately
+        dayData = await loadDay(currentDay);
+
         if (Storage.isFirstVisit()) {
             showWelcomeToast('مرحباً دودي. هذا الكون كُتب لكِ.');
             Storage.markVisited();
@@ -59,6 +71,9 @@ const App = (() => {
 
         checkEvents();
         checkAchievements();
+
+        // Task 5: Schedule automatic midnight rollover
+        scheduleNextMidnight();
     }
 
     function cacheDOM() {
@@ -377,18 +392,17 @@ const App = (() => {
 
         console.log('Loading JSON...');
         let data = {};
-        try {
-            const res = await fetch(config.dataFile);
-            if (res.ok) {
-                data = await res.json();
-                console.log('JSON loaded');
-            } else {
-                console.warn('JSON not found for ' + planetId + ', using fallback');
-                console.log('JSON loaded (fallback)');
+        // Task 4: Use day-specific planet data if available, fall back to static file
+        const dayPlanetData = dayData?.planets?.[planetId];
+        if (dayPlanetData) {
+            data = dayPlanetData;
+        } else {
+            try {
+                const res = await fetch(config.dataFile);
+                if (res.ok) data = await res.json();
+            } catch (e) {
+                console.warn('JSON load error for ' + planetId + ':', e);
             }
-        } catch (e) {
-            console.warn('JSON load error for ' + planetId + ':', e);
-            console.log('JSON loaded (fallback)');
         }
 
         openModal(config.modalId);
@@ -514,6 +528,16 @@ const App = (() => {
     // READING / BOOK
     // ═══════════════════════════════════════════
     async function openTodayBook() {
+        // Task 1: Always advance to the latest unlocked day before opening
+        if (Storage.canUnlockToday()) {
+            const p = Storage.getProgress();
+            const next = (p.highestDay || 0) + 1;
+            if (next > currentDay && next <= CONFIG.TOTAL_DAYS) {
+                currentDay = next;
+                dayData = await loadDay(currentDay);
+            }
+        }
+
         const canRead = Storage.isDayUnlocked(currentDay);
         if (!canRead) {
             goToPage('gate');
@@ -537,6 +561,59 @@ const App = (() => {
             dom.openBook.classList.remove('closing');
             goToPage('planets');
         }, 700);
+    }
+
+    // ═══════════════════════════════════════════
+    // TASK 5 — MIDNIGHT AUTO-ROLLOVER
+    // Schedules an exact timeout for the next unlock time.
+    // When it fires, advances currentDay, refreshes all dynamic sections,
+    // and reschedules for the following midnight — no page reload needed.
+    // ═══════════════════════════════════════════
+    function scheduleNextMidnight() {
+        const progress = Storage.getProgress();
+        const nextUnlock = new Date(progress.nextUnlock);
+        const delay = nextUnlock.getTime() - Date.now();
+        if (delay > 0) {
+            setTimeout(async () => {
+                await doMidnightRollover();
+                scheduleNextMidnight();
+            }, delay + 500); // +500ms safety margin
+        } else if (Storage.canUnlockToday()) {
+            // Already past midnight but rollover not processed yet
+            doMidnightRollover();
+        }
+    }
+
+    async function doMidnightRollover() {
+        if (!Storage.canUnlockToday()) return;
+        const progress = Storage.getProgress();
+        const nextDay = (progress.highestDay || 0) + 1;
+        if (nextDay > CONFIG.TOTAL_DAYS || nextDay <= currentDay) return;
+
+        currentDay = nextDay;
+        dayData = await loadDay(currentDay);
+
+        // Refresh Gate: show new status and restart countdown
+        renderGate();
+        if (currentPage === 'gate') startTimer();
+
+        // Refresh Challenge: new day = new challenge
+        renderChallenge();
+
+        // Refresh sky for the new day
+        SkyGenerator.generateForDay(currentDay);
+
+        // If book is open, reload with new day content immediately
+        if (currentPage === 'reading') {
+            renderDay(dayData);
+            renderProgress();
+        }
+
+        // Refresh star map day indicator
+        renderStarMap();
+
+        // Close any open planet modals to prevent stale data
+        closeAllModals();
     }
 
     async function loadDay(dayNum) {
