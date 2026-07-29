@@ -896,6 +896,8 @@ textarea, input {
     flex: 1;
     position: relative;
     overflow: hidden;
+    display: flex;
+    opacity: 1;
 }
 
 .page-left {
