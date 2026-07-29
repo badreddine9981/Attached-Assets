@@ -35,15 +35,13 @@ const App = (() => {
         AudioManager.playSceneMusic('galaxy');
 
         const progress = Storage.getProgress();
-        currentDay = progress.currentDay || 1;
+        const calendarDay = Storage.getCalendarDay();
 
-        // Task 1 & 6: Advance to the latest available day on load
-        if (Storage.canUnlockToday()) {
-            const nextDay = (progress.highestDay || 0) + 1;
-            if (nextDay > currentDay && nextDay <= CONFIG.TOTAL_DAYS) {
-                currentDay = nextDay;
-            }
-        }
+        // currentDay = next unread day, never exceeding today's calendar day.
+        // highestDay tracks the last day actually read (0 on first visit).
+        // Example: project is on Day 4, user has read Days 1-2 → currentDay = 3.
+        const nextUnread = (progress.highestDay || 0) + 1;
+        currentDay = Math.min(calendarDay, nextUnread);
 
         // Pre-load today's day data so planets are ready immediately
         dayData = await loadDay(currentDay);
@@ -106,6 +104,11 @@ const App = (() => {
                 configData = await res.json();
                 Object.assign(CONFIG, configData);
                 planets = configData.planets || [];
+                // Initialize the calendar engine with the project's absolute start date.
+                // This must happen before any isDayUnlocked / canUnlockToday call.
+                if (configData.startDate) {
+                    Storage.setStartDate(configData.startDate);
+                }
             }
         } catch (e) {
             console.warn('Config load failed:', e);
@@ -470,8 +473,8 @@ const App = (() => {
     }
 
     function updateTimer() {
-        const progress = Storage.getProgress();
-        const nextUnlock = new Date(progress.nextUnlock);
+        // Next unlock is always the next calendar midnight — independent of stored progress.
+        const nextUnlock = Storage.getTomorrowMidnight();
         let remaining = nextUnlock.getTime() - Date.now();
         const unlocked = remaining <= 0;
 
@@ -570,26 +573,34 @@ const App = (() => {
     // and reschedules for the following midnight — no page reload needed.
     // ═══════════════════════════════════════════
     function scheduleNextMidnight() {
-        const progress = Storage.getProgress();
-        const nextUnlock = new Date(progress.nextUnlock);
-        const delay = nextUnlock.getTime() - Date.now();
+        // Always schedule for the next real calendar midnight.
+        // No dependency on stored progress.nextUnlock.
+        const nextMidnight = Storage.getTomorrowMidnight();
+        const delay = nextMidnight.getTime() - Date.now();
         if (delay > 0) {
             setTimeout(async () => {
                 await doMidnightRollover();
                 scheduleNextMidnight();
-            }, delay + 500); // +500ms safety margin
-        } else if (Storage.canUnlockToday()) {
-            // Already past midnight but rollover not processed yet
+            }, delay + 500); // +500 ms safety margin
+        } else {
+            // Already past midnight (e.g. tab was suspended): fire immediately
             doMidnightRollover();
         }
     }
 
     async function doMidnightRollover() {
-        if (!Storage.canUnlockToday()) return;
+        const calendarDay = Storage.getCalendarDay();
         const progress = Storage.getProgress();
-        const nextDay = (progress.highestDay || 0) + 1;
-        if (nextDay > CONFIG.TOTAL_DAYS || nextDay <= currentDay) return;
 
+        // Nothing to do if the calendar hasn't advanced past the last read day.
+        if (calendarDay <= (progress.highestDay || 0)) return;
+        if (calendarDay > CONFIG.TOTAL_DAYS) return;
+
+        // Next unread day — what the user should see next.
+        const nextDay = (progress.highestDay || 0) + 1;
+        if (nextDay > calendarDay) return; // shouldn't happen
+
+        // Advance currentDay to the next unread day.
         currentDay = nextDay;
         dayData = await loadDay(currentDay);
 
@@ -597,7 +608,7 @@ const App = (() => {
         renderGate();
         if (currentPage === 'gate') startTimer();
 
-        // Refresh Challenge: new day = new challenge
+        // Refresh Challenge: new calendar day = new challenge
         renderChallenge();
 
         // Refresh sky for the new day

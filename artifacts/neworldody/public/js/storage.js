@@ -20,10 +20,26 @@ const Storage = (() => {
         }
     };
 
+    // Project absolute start date — set by app.js after loading config.json
+    let _startDate = null;
+
+    // Returns today's day number relative to the project start date.
+    // Day 1 = startDate, Day 2 = startDate + 1, etc.
+    // Falls back to 1 if start date is not set yet.
+    function getCalendarDay() {
+        if (!_startDate) return 1;
+        const start = new Date(_startDate);
+        start.setHours(0, 0, 0, 0);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const elapsed = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+        return Math.max(1, Math.min(elapsed + 1, CONFIG.TOTAL_DAYS));
+    }
+
     function getDefaultProgress() {
         return {
             currentDay: 1,
-            highestDay: 1,
+            highestDay: 0,   // 0 = no day has been read yet (was incorrectly 1)
             completedDays: [],
             challengesCompleted: 0,
             starsUnlocked: 0,
@@ -109,19 +125,19 @@ const Storage = (() => {
             return safeSet(CONFIG.STORAGE_KEYS.FIRST_VISIT, false);
         },
 
+        // A day is unlocked when the calendar day (relative to project start date)
+        // is >= dayNum. This is purely calendar-based, independent of install time.
         isDayUnlocked(dayNum) {
-            if (dayNum <= 1) return true;
-            const progress = this.getProgress();
-            if (dayNum > progress.highestDay + 1) return false;
-            if (dayNum <= progress.highestDay) return true;
-            const nextUnlock = new Date(progress.nextUnlock);
-            return Date.now() >= nextUnlock.getTime();
+            return dayNum <= getCalendarDay();
         },
 
+        // Returns true when the calendar has advanced past the last day the user read.
+        // This drives both the "advance currentDay" logic in openTodayBook() and the
+        // midnight rollover scheduler.
         canUnlockToday() {
             const progress = this.getProgress();
-            const nextUnlock = new Date(progress.nextUnlock);
-            return Date.now() >= nextUnlock.getTime() && progress.highestDay < CONFIG.TOTAL_DAYS;
+            return getCalendarDay() > (progress.highestDay || 0) &&
+                   (progress.highestDay || 0) < CONFIG.TOTAL_DAYS;
         },
 
         unlockDay(dayNum) {
@@ -257,6 +273,17 @@ const Storage = (() => {
 
         clearAll() {
             Object.values(CONFIG.STORAGE_KEYS).forEach(k => localStorage.removeItem(k));
+        },
+
+        // Set the project's absolute start date (called by app.js after loadConfig).
+        // Must be called before getCalendarDay() returns a meaningful value.
+        setStartDate(dateStr) {
+            _startDate = dateStr || null;
+        },
+
+        // Expose calendar-day calculation to app.js
+        getCalendarDay() {
+            return getCalendarDay();
         },
 
         getTomorrowMidnight,

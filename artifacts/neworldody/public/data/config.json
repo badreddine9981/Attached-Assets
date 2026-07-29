@@ -1,6 +1,7 @@
 {
   "appName": "Neworldody",
   "dedication": "لدودي",
+  "startDate": "2026-07-26",
   "totalDays": 365,
   "version": "2.0.0",
   "variableCardTypes": ["tip", "reflection", "challenge", "word", "quote", "habit", "idea"],
