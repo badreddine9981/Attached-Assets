@@ -35,13 +35,10 @@ const App = (() => {
         AudioManager.playSceneMusic('galaxy');
 
         const progress = Storage.getProgress();
-        const calendarDay = Storage.getCalendarDay();
 
-        // currentDay = next unread day, never exceeding today's calendar day.
-        // highestDay tracks the last day actually read (0 on first visit).
-        // Example: project is on Day 4, user has read Days 1-2 → currentDay = 3.
-        const nextUnread = (progress.highestDay || 0) + 1;
-        currentDay = Math.min(calendarDay, nextUnread);
+        // currentDay = today's project calendar day (always the real date-based day).
+        // highestDay only tracks progress/achievements — it never caps which day is shown.
+        currentDay = Storage.getCalendarDay();
 
         // Pre-load today's day data so planets are ready immediately
         dayData = await loadDay(currentDay);
@@ -164,6 +161,12 @@ const App = (() => {
         }
         if (page === 'reading') {
             SkyGenerator.generateForDay(currentDay);
+            // Run the timer inside the reading page too
+            startTimer();
+        }
+        // Stop timer when leaving reading/gate pages
+        if (page !== 'reading' && page !== 'gate') {
+            stopTimer();
         }
     }
 
@@ -221,6 +224,13 @@ const App = (() => {
         }
         const galaxyPage = document.getElementById('galaxy-page');
         if (galaxyPage) galaxyPage.addEventListener('click', enterGalaxy);
+
+        // Reading page back button
+        const readingBackBtn = document.getElementById('readingBackBtn');
+        if (readingBackBtn) readingBackBtn.addEventListener('click', () => {
+            AudioManager.playSFX('button');
+            closeBook();
+        });
 
         // Gate
         if (dom.gateOpen) dom.gateOpen.addEventListener('click', openTodayBook);
@@ -478,8 +488,10 @@ const App = (() => {
         let remaining = nextUnlock.getTime() - Date.now();
         const unlocked = remaining <= 0;
 
+        let timeText;
         if (unlocked) {
-            if (dom.gateCountdown) dom.gateCountdown.textContent = '٠٠:٠٠:٠٠';
+            timeText = '٠٠:٠٠:٠٠';
+            if (dom.gateCountdown) dom.gateCountdown.textContent = timeText;
             if (dom.gateStatus) dom.gateStatus.textContent = 'حان وقت الصفحة الجديدة';
             if (dom.gateOpen) dom.gateOpen.disabled = false;
             document.getElementById('gate-page')?.classList.add('gate-unlocked');
@@ -487,9 +499,14 @@ const App = (() => {
             const h = Math.floor(remaining / 3600000);
             const m = Math.floor((remaining % 3600000) / 60000);
             const s = Math.floor((remaining % 60000) / 1000);
-            if (dom.gateCountdown) dom.gateCountdown.textContent = `${toArabicNum(h).padStart(2, '٠')}:${toArabicNum(m).padStart(2, '٠')}:${toArabicNum(s).padStart(2, '٠')}`;
+            timeText = `${toArabicNum(h).padStart(2, '٠')}:${toArabicNum(m).padStart(2, '٠')}:${toArabicNum(s).padStart(2, '٠')}`;
+            if (dom.gateCountdown) dom.gateCountdown.textContent = timeText;
             if (dom.gateOpen) dom.gateOpen.disabled = true;
         }
+
+        // Also update the compact timer embedded in the reading/journal page
+        const readingTimer = document.getElementById('readingTimer');
+        if (readingTimer) readingTimer.textContent = timeText;
     }
 
     // ═══════════════════════════════════════════
@@ -531,16 +548,7 @@ const App = (() => {
     // READING / BOOK
     // ═══════════════════════════════════════════
     async function openTodayBook() {
-        // Task 1: Always advance to the latest unlocked day before opening
-        if (Storage.canUnlockToday()) {
-            const p = Storage.getProgress();
-            const next = (p.highestDay || 0) + 1;
-            if (next > currentDay && next <= CONFIG.TOTAL_DAYS) {
-                currentDay = next;
-                dayData = await loadDay(currentDay);
-            }
-        }
-
+        // currentDay is always today's calendar day — no need to advance it.
         const canRead = Storage.isDayUnlocked(currentDay);
         if (!canRead) {
             goToPage('gate');

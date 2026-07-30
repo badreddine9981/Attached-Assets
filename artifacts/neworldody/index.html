@@ -51,7 +51,6 @@
     <nav class="page-nav" id="pageNav" aria-label="التنقل">
         <button class="nav-dot" data-page="galaxy" aria-label="المجرة" type="button"></button>
         <button class="nav-dot" data-page="planets" aria-label="الكواكب" type="button"></button>
-        <button class="nav-dot" data-page="gate" aria-label="البوابة" type="button"></button>
         <button class="nav-dot" data-page="challenge" aria-label="التحدي" type="button"></button>
     </nav>
 
@@ -131,6 +130,17 @@
     <!-- READING / BOOK PAGE -->
     <section id="reading-page" class="page" aria-label="كتاب اليوم">
         <div class="reading-light" aria-hidden="true"></div>
+        <!-- Reading page top bar: back button + compact next-day timer -->
+        <div class="reading-topbar">
+            <button class="reading-back-btn" id="readingBackBtn" type="button" aria-label="العودة">
+                <span class="back-arrow">←</span>
+                <span class="back-label">الكواكب</span>
+            </button>
+            <div class="reading-timer-wrap" aria-label="وقت الصفحة التالية">
+                <span class="reading-timer-label">الصفحة التالية</span>
+                <span class="reading-timer-count" id="readingTimer">٠٠:٠٠:٠٠</span>
+            </div>
+        </div>
         <div class="open-book" id="openBook">
             <div class="page page-left">
                 <div class="page-paper">
@@ -327,9 +337,9 @@
         <span>مرحباً دودي. هذا الكون كُتب لكِ.</span>
     </div>
 
-    <script src="js/storage.js" defer></script>
-    <script src="js/sky.js" defer></script>
-    <script src="js/audio.js" defer></script>
-    <script src="js/app.js" defer></script>
+    <script src="js/storage.js?v=3" defer></script>
+    <script src="js/sky.js?v=3" defer></script>
+    <script src="js/audio.js?v=3" defer></script>
+    <script src="js/app.js?v=3" defer></script>
 </body>
 </html>

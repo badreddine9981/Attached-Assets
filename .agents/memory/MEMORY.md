@@ -1,0 +1,3 @@
+- [Service worker caching](service-worker-caching.md) — SW at public/sw.js aggressively caches JS; bump CACHE_NAME to break stale cache after code changes.
+- [currentDay calendar fix](currentday-calendar.md) — currentDay must equal calendarDay directly; never cap by highestDay or new users always see Day 1.
+- [Dual codebase layout](dual-codebase.md) — app is vanilla JS in public/js/ loaded by index.html; src/ is an unused React scaffold. Fixes go in public/js/.
