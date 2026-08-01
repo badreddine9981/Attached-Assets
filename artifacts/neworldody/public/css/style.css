@@ -1005,8 +1005,8 @@ textarea, input {
 .page-right::-webkit-scrollbar-track { background: transparent; }
 
 .page-paper {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    min-height: 100%;
     padding: 40px;
 }
 
