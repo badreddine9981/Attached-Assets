@@ -1815,9 +1815,9 @@ textarea, input {
     .progress-ring { width: 60px; height: 60px; margin: 0; }
     .sky-preview { width: 64px; height: 64px; margin-top: 0; }
     .sky-note { display: none; }
-    .page-title { font-size: 1.4rem; }
-    .message-body { font-size: 0.92rem; }
-    .wisdom-block blockquote { font-size: 1rem; }
+    .page-title { font-size: 1.15rem; }
+    .message-body { font-size: 0.78rem; }
+    .wisdom-block blockquote { font-size: 0.84rem; }
     .card { padding: 16px; }
     .right-content { gap: 16px; padding: 48px 10px 10px; }
 
