@@ -1004,8 +1004,10 @@ textarea, input {
 .page-right::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
 .page-right::-webkit-scrollbar-track { background: transparent; }
 
-/* Override .open-book .page { overflow: hidden } for the scrollable side only */
+/* Override .open-book .page for the scrollable side:
+   display:block lets .page-paper grow with content so overflow-y:auto triggers */
 .open-book .page-right {
+    display: block;
     overflow-y: auto;
     overflow-x: hidden;
 }
