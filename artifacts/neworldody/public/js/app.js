@@ -43,17 +43,29 @@ const App = (() => {
             if (h >= 19 && h < 23) return 4;
             return 5;
         }
+        // Boundaries where a new period begins (local hours)
+        const boundaries = [5, 7, 11, 16, 19, 23];
+
         function apply() {
-            const idx = getSlotIndex(new Date().getHours());
+            // new Date().getHours() = device local time, never UTC
+            const now = new Date();
+            const idx = getSlotIndex(now.getHours());
             slots.forEach((s, i) => {
                 const el = document.getElementById(s.id);
                 if (el) el.style.opacity = i === idx ? '1' : '0';
             });
             const stars = document.getElementById('galaxyStars');
             if (stars) stars.style.opacity = slots[idx].starOpacity;
+
+            // Schedule next call for the exact moment the next period begins
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
+            const nextBoundary = boundaries.find(b => b > h) ?? (24 + boundaries[0]);
+            const msUntilNext = ((nextBoundary - h) * 3600 - m * 60 - s) * 1000 + 500;
+            setTimeout(apply, msUntilNext);
         }
         apply();
-        setInterval(apply, 5 * 60 * 1000);
     }
 
     async function init() {
