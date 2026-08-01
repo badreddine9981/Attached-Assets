@@ -26,7 +26,38 @@ const App = (() => {
     // ═══════════════════════════════════════════
     // INIT
     // ═══════════════════════════════════════════
+    function initSkyTime() {
+        const slots = [
+            { id: 'sky-dawn',    starOpacity: 0.3  }, // 05–07
+            { id: 'sky-morning', starOpacity: 0.05 }, // 07–11
+            { id: 'sky-midday',  starOpacity: 0    }, // 11–16
+            { id: 'sky-sunset',  starOpacity: 0.3  }, // 16–19
+            { id: 'sky-evening', starOpacity: 0.8  }, // 19–23
+            { id: 'sky-night',   starOpacity: 1    }, // 23–05
+        ];
+        function getSlotIndex(h) {
+            if (h >= 5  && h < 7)  return 0;
+            if (h >= 7  && h < 11) return 1;
+            if (h >= 11 && h < 16) return 2;
+            if (h >= 16 && h < 19) return 3;
+            if (h >= 19 && h < 23) return 4;
+            return 5;
+        }
+        function apply() {
+            const idx = getSlotIndex(new Date().getHours());
+            slots.forEach((s, i) => {
+                const el = document.getElementById(s.id);
+                if (el) el.style.opacity = i === idx ? '1' : '0';
+            });
+            const stars = document.getElementById('galaxyStars');
+            if (stars) stars.style.opacity = slots[idx].starOpacity;
+        }
+        apply();
+        setInterval(apply, 5 * 60 * 1000);
+    }
+
     async function init() {
+        initSkyTime();
         cacheDOM();
         await loadConfig();
         await loadGlobalData();

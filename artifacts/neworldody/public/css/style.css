@@ -367,6 +367,29 @@ textarea, input {
 }
 
 /* ─── PAGE 1: GALAXY ─── */
+/* ─── TIME-OF-DAY SKY ─── */
+.sky-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+.sky-layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 3s ease;
+    will-change: opacity;
+}
+#sky-dawn    { background-image: url('../img/sky-dawn.jpg'); }
+#sky-morning { background-image: url('../img/sky-morning.jpg'); }
+#sky-midday  { background-image: url('../img/sky-midday.jpg'); }
+#sky-sunset  { background-image: url('../img/sky-sunset.jpg'); }
+#sky-evening { background-image: url('../img/sky-evening.jpg'); }
+#sky-night   { background-image: url('../img/sky-night.jpg'); }
+#galaxyStars { transition: opacity 3s ease; }
+
 #galaxy-page {
     background: radial-gradient(ellipse at bottom, #1b2735 0%, var(--space-deep) 60%, #000 100%);
 }
