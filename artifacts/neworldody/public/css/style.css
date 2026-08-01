@@ -1227,7 +1227,7 @@ textarea, input {
 }
 
 .message-body {
-    font-size: 1.05rem;
+    font-size: 0.86rem;
     color: var(--ink);
     line-height: 2;
     text-align: justify;
