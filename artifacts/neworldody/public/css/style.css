@@ -1787,13 +1787,27 @@ textarea, input {
     .open-book {
         flex-direction: column;
         width: 100vw;
-        height: 100vh;
+        height: auto;
+        min-height: 100vh;
         max-height: none;
         border-radius: 0;
+        overflow: visible;
+    }
+    /* Reading page: let #reading-page be the scroll viewport on mobile */
+    #reading-page {
+        overflow-y: auto;
+        overflow-x: hidden;
+        justify-content: flex-start;
+        align-items: stretch;
     }
     .page-left { min-height: 160px; flex: none; }
-    .page-right { flex: 1; }
-    .page-paper { padding: 20px; }
+    .page-right { flex: none; height: auto; }
+    .open-book .page-right {
+        overflow-y: visible;
+        overflow-x: visible;
+        display: block;
+    }
+    .page-paper { padding: 20px; min-height: 0; }
     .left-content { flex-direction: row; gap: 12px; justify-content: center; align-items: center; height: 100%; }
     .day-ornament { display: none; }
     .day-arabic { font-size: 3.5rem; margin: 0; }
