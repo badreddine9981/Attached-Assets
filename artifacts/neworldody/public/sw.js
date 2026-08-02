@@ -3,7 +3,7 @@
  * Caches the app shell and data for offline use.
  */
 
-const CACHE_NAME = 'neworldody-v4';
+const CACHE_NAME = 'neworldody-v5';
 const ASSETS = [
   '/',
   '/css/style.css',

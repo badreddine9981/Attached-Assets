@@ -715,30 +715,11 @@ const App = (() => {
         if (dom.pageMessage) dom.pageMessage.textContent = data.message || '';
         if (dom.pageWisdom) dom.pageWisdom.textContent = data.wisdom || '';
         if (dom.pageAuthor) dom.pageAuthor.textContent = data.wisdom_author ? `— ${data.wisdom_author}` : '';
-        if (dom.spaceFact) dom.spaceFact.textContent = data.space_fact || '';
-        if (dom.starOfDay) dom.starOfDay.textContent = data.star_of_day || '';
-        if (dom.planetFocus) dom.planetFocus.textContent = data.planet_focus || '';
-        renderVariableCard(data.variable_card);
         renderSurpriseCard(data.surprise_card);
         renderOccasion(data.special_occasion);
         if (dom.skyNote) dom.skyNote.textContent = 'لم تتكرر هذه السماء منذ بداية الرحلة';
     }
 
-    function renderVariableCard(card) {
-        if (!card || !dom.variableCard) {
-            if (dom.variableCard) dom.variableCard.classList.add('hidden');
-            return;
-        }
-        const icons = { tip: '🌱', reflection: '💭', challenge: '⚡', word: '✒️', quote: '📜', habit: '🍃', idea: '💡' };
-        const titles = {
-            tip: 'نصيحة اليوم', reflection: 'سؤال للتأمل', challenge: 'تحدي اليوم',
-            word: 'كلمة جميلة', quote: 'اقتباس أدبي', habit: 'عادة صحية', idea: 'فكرة إبداعية'
-        };
-        dom.variableCard.classList.remove('hidden');
-        dom.variableIcon.textContent = icons[card.type] || '🌱';
-        dom.variableTitle.textContent = titles[card.type] || 'بطاقة اليوم';
-        dom.variableContent.textContent = card.content || '';
-    }
 
     function renderSurpriseCard(card) {
         if (!card || !dom.surpriseCard) {
